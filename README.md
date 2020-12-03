@@ -7,6 +7,38 @@
 
 前端框架暂时不打算学习（https://github.com/shiwei-Ren/smpe-admin-web）
 
+# 准备数据库
+数据库名 `smpe`
+
+sql文件：
+![](README.assets/ae1a5d82.png)
+
+使用方法：
+1. 打开 navicat 
+2. 打开本地连接
+3. 新建名为：`smpe`的库
+4. 执行sql文件
+5. 如图：
+
+![](README.assets/f011123a.png)
+
+![](README.assets/09b76d11.png)
+
+![](README.assets/bb721c2e.png)
+
+![](README.assets/214faf16.png)
+
+![](README.assets/6507a221.png)
+
+![](README.assets/8627d455.png)
+
+![](README.assets/bc512d7d.png)
+
+![](README.assets/ce351d24.png)
+
+![](README.assets/db3c03fe.png)
+
+![](README.assets/984bbf21.png)
 # IDEA 安裝插件 
 安装插件 `Paste lmagesinto into Markdown`
 安装后，
