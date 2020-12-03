@@ -15,8 +15,6 @@
 
 新建父工程：`smpe-admin-learn`
 
-
-![image-20201203164836278](https://gitee.com/sy_zrj/smpe-admin-learn/blob/create-smpe-admin-learn/README.assets/image-20201203164836278.png)
 ![image-20201203164836278](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203164836278.png)
 
 ![image-20201203164904482](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203164904482.png)![image-20201203165048747](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203165048747.png)
