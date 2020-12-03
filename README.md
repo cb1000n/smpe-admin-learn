@@ -45,6 +45,6 @@
 
 结果如图：
 
-![image-20201203171247415](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203171247415.png)
+![image-20201203171247415](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-system/README.assets/image-20201203171247415.png)
 
-![image-20201203171304998](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203171304998.png)
+![image-20201203171304998](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-system/README.assets/image-20201203171304998.png)
