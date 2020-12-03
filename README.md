@@ -93,11 +93,11 @@ public class AppRun {
 
 启动效果：
 
-![image-20201203172242814](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203172242814.png)
+![image-20201203172242814](https://gitee.com/sy_zrj/smpe-admin-learn/raw/add-springboot-dependency/README.assets/image-20201203172242814.png)
 
 浏览器访问测试：访问到页面，服务启动成功。
 
-![image-20201203172309837](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203172309837.png)
+![image-20201203172309837](https://gitee.com/sy_zrj/smpe-admin-learn/raw/add-springboot-dependency/README.assets/image-20201203172309837.png)
 
-![image-20201203172332247](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203172332247.png)
+![image-20201203172332247](https://gitee.com/sy_zrj/smpe-admin-learn/raw/add-springboot-dependency/README.assets/image-20201203172332247.png)
 
