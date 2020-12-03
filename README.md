@@ -7,47 +7,59 @@
 
 前端框架暂时不打算学习（https://github.com/shiwei-Ren/smpe-admin-web）
 
+# IDEA 安裝插件 
+安装插件 `Paste lmagesinto into Markdown`
+安装后，
+1. 可直接通过 ctrl + c 把图片文件复插入到 md 文件（支持目录自定义），香！
+2. 上传远程仓库（码云等）后，不需要手动更改，图片的插入地址，直接显示，香！
+3. 目录设置成 `/{document_name}.assets` 之后，还可以适配 Typora ，香！
 
+![](README.assets/29aac6f8.png)
 
+![](README.assets/31ee6546.png)
+
+效果如图：
+![](README.assets/9119b803.png)
+![](README.assets/e5b74f49.png)
 # 初始化
 
 ## 新建父工程
 
 新建父工程：`smpe-admin-learn`
 
-![image-20201203164836278](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-admin-learn/README.assets/image-20201203164836278.png)
+![image-20201203164836278](README.assets/image-20201203164836278.png)
 
-![image-20201203164904482](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-admin-learn/README.assets/image-20201203164904482.png)![image-20201203165048747](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-admin-learn/README.assets/image-20201203165048747.png)
+![image-20201203164904482](README.assets/image-20201203164904482.png)![image-20201203165048747](README.assets/image-20201203165048747.png)
 
-![image-20201203165223472](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-admin-learn/README.assets/image-20201203165223472.png)
+![image-20201203165223472](README.assets/image-20201203165223472.png)
 
 最终如图所示
 
-![image-20201203165248153](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-admin-learn/README.assets/image-20201203165248153.png)
+![image-20201203165248153](README.assets/image-20201203165248153.png)
 
 ## 新建子模块
 
 新建子模块：`smpe-common`
 
-![image-20201203170327655](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-common/README.assets/image-20201203170327655.png)
+![image-20201203170327655](README.assets/image-20201203170327655.png)
 
-![image-20201203170501662](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-common/README.assets/image-20201203170501662.png)
+![image-20201203170501662](README.assets/image-20201203170501662.png)
 
-![image-20201203170536781](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-common/README.assets/image-20201203170536781.png)
+![image-20201203170536781](README.assets/image-20201203170536781.png)
 
 结果如图：
 
-![image-20201203170620688](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-common/README.assets/image-20201203170620688.png)
+![image-20201203170620688](README.assets/image-20201203170620688.png)
 
-![image-20201203170639879](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-common/README.assets/image-20201203170639879.png)
+![image-20201203170639879](README.assets/image-20201203170639879.png)
 
 同上再创建子模块`smpe-system`
 
 结果如图：
 
-![image-20201203171247415](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-system/README.assets/image-20201203171247415.png)
+![image-20201203171247415](README.assets/image-20201203171247415.png)
 
-![image-20201203171304998](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-system/README.assets/image-20201203171304998.png)
+![image-20201203171304998](README.assets/image-20201203171304998.png)
 
 ## 添加 springboot 依赖
 
@@ -93,11 +105,11 @@ public class AppRun {
 
 启动效果：
 
-![image-20201203172242814](https://gitee.com/sy_zrj/smpe-admin-learn/raw/add-springboot-dependency/README.assets/image-20201203172242814.png)
+![image-20201203172242814](README.assets/image-20201203172242814.png)
 
 浏览器访问测试：访问到页面，服务启动成功。
 
-![image-20201203172309837](https://gitee.com/sy_zrj/smpe-admin-learn/raw/add-springboot-dependency/README.assets/image-20201203172309837.png)
+![image-20201203172309837](README.assets/image-20201203172309837.png)
 
-![image-20201203172332247](https://gitee.com/sy_zrj/smpe-admin-learn/raw/add-springboot-dependency/README.assets/image-20201203172332247.png)
+![image-20201203172332247](README.assets/image-20201203172332247.png)
 
