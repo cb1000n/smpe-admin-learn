@@ -40,3 +40,11 @@
 ![image-20201203170620688](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-common/README.assets/image-20201203170620688.png)
 
 ![image-20201203170639879](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-common/README.assets/image-20201203170639879.png)
+
+同上再创建子模块`smpe-system`
+
+结果如图：
+
+![image-20201203171247415](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203171247415.png)
+
+![image-20201203171304998](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203171304998.png)
