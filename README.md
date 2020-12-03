@@ -48,3 +48,56 @@
 ![image-20201203171247415](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-system/README.assets/image-20201203171247415.png)
 
 ![image-20201203171304998](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-system/README.assets/image-20201203171304998.png)
+
+## 添加 springboot 依赖
+
+在父工程的 pom.xml 里边添加依赖
+
+```xml
+<!-- 所有的springboot的工程都以spring父工程为父工程 -->
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.1.0.RELEASE</version>
+</parent>
+
+<dependencies>
+    <!-- springboot web 启动器 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+</dependencies>
+```
+
+在子工程 `smpe-system` 中添加启动类
+
+```java
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * @ClassName; AppRun
+ * @description: TODO SpringBoot 启动类
+ * @Author: ZhangRenjie
+ * @date: 2020/12/3 17:18
+ */
+@SpringBootApplication
+public class AppRun {
+    public static void main(String[] args) {
+        SpringApplication.run(AppRun.class, args);
+    }
+}
+```
+
+启动效果：
+
+![image-20201203172242814](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203172242814.png)
+
+浏览器访问测试：访问到页面，服务启动成功。
+
+![image-20201203172309837](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203172309837.png)
+
+![image-20201203172332247](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203172332247.png)
+

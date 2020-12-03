@@ -13,5 +13,19 @@
         <module>smpe-system</module>
     </modules>
 
+    <!-- 所有的springboot的工程都以spring父工程为父工程 -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.0.RELEASE</version>
+    </parent>
+
+    <dependencies>
+        <!-- springboot web 启动器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
