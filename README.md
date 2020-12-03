@@ -24,3 +24,19 @@
 最终如图所示
 
 ![image-20201203165248153](https://gitee.com/sy_zrj/smpe-admin-learn/raw/create-smpe-admin-learn/README.assets/image-20201203165248153.png)
+
+## 新建子模块
+
+新建子模块：`smpe-common`
+
+![image-20201203170327655](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203170327655.png)
+
+![image-20201203170501662](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203170501662.png)
+
+![image-20201203170536781](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203170536781.png)
+
+结果如图：
+
+![image-20201203170620688](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203170620688.png)
+
+![image-20201203170639879](G:\all-workspace\all-project\小云通知\框架\smpe-admin-learn\README.assets\image-20201203170639879.png)
