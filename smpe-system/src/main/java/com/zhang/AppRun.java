@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Author: ZhangRenjie
  * @date: 2020/12/3 17:18
  */
+
 @SpringBootApplication
 public class AppRun {
     public static void main(String[] args) {

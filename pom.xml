@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.zhang</groupId>
+    <groupId>com.zhang</groupId>
     <artifactId>smpe-admin-learn</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -20,7 +20,81 @@
         <version>2.1.0.RELEASE</version>
     </parent>
 
+    <!--声明变量，用于统一控制版本-->
+    <properties>
+
+        <!--文件编码格式 start-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!--文件编码格式 end-->
+
+        <!--jdk 版本 start-->
+        <java.version>1.8</java.version>
+        <!--jdk 版本 end-->
+
+        <!--以上变量是给其他依赖声明的，否则可能会出现乱码、报错等，可以更改为 GBK 测试（自定义日志乱码）-->
+
+        <swagger.version>2.9.2</swagger.version>
+        <lombok.version>1.18.8</lombok.version>
+    </properties>
+
+    <!--
+    该节点下的依赖关系只是为了统一版本号，
+    子项目添加依赖时，只能选择这个标签中的版本，否则会报错；
+    该节点中的依赖关系子项目不会自动继承，除非子项目主动引用；
+
+    如果一些依赖，只是某几个子项目需要，其他项目不需要，可以在这里进行版本锁定，
+    以防子项目引入不同版本的依赖，造成问题，同时在这里锁定后，子项目可以不用写版本号
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <!--lombok start-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <!--lombok end-->
+
+            <!--swagger start-->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <!--swagger end-->
+        </dependencies>
+    </dependencyManagement>
+
+    <!--引入依赖-->
     <dependencies>
+
+        <!--lombok start-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+        <!--lombok end-->
+
+        <!--swagger start-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <!--swagger end-->
+
         <!-- springboot web 启动器 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
