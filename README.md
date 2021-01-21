@@ -1,12 +1,875 @@
-
-
 # smpe-admin-learn
 
 #### 介绍
 学习开源框架：https://github.com/shiwei-Ren/smpe-admin
 
 前端框架暂时不打算学习（https://github.com/shiwei-Ren/smpe-admin-web）
+
+# 实现获取图片验证码接口
+
+## 实现效果
+
+前端项目可从`/api/auth/code`获取验证码
+
+![image-20210121090358208](README.assets/image-20210121090358208.png)
+
+## 添加或修改git截图
+
+![image-20210121090144017](README.assets/image-20210121090144017.png)
+
+## 添加或修改的文件树
+
+```
+- smpe-admin
+	- smep-common
+		- src.main
+            - java
+                - com.zhang
+                    - nnotation 自定义注解包
+                        - rest 匿名访问注解包
+                            - AnonymousGetMapping 支持匿名访问  GetMapping
+                        - AnonymousAccess 用于标记匿名访问方法
+                    - enums 添加 - 自定义枚举类包
+                        - ResultEnum 统一显影消息枚举
+                    - exception 添加 - 封装异常包
+                        - BadRequestException 通用请求异常
+                    - response 封装返回数据包
+                        - Result 对返回前端数据进行封装
+                    - utils
+                        - RedisUtils springData Redis 的工具类
+                        - StringUtils 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
+        - pom.xml hutool工具包、redis 版本
+    - smpe-system
+    	- src.main
+            - java
+                - com.zhang
+                    - modules
+                        - security
+                            - config
+                                - bean
+                                    - LoginCode 登录验证配置信息
+                                    - LoginCodeEnum 验证码配置枚举
+                                    - LoginProperties 从配置文件读取 login 配置
+                                    - SecurityProperties 类描述Jwt参数配置 读取yml中对jwt的配置，注入到属性当中
+                            - controller
+                                - AuthorizationController 授权Controller
+            - resources 资源包
+                - config
+                    application-dev.yml
+		- pom.xml 引入图片验证码工具
+	- pom.xml 锁定 hutool工具包、redis 版本
+				
+					
+```
+
+## 方法执行流程UML类图
+
+精简版，只写了与`getCode`接口实现相关的成员变量和方法
+
+ ![image-20210121080343825](README.assets/image-20210121080343825.png)
+
+## 具体修改文件
+
+`smpe-admin-learn pom.xml` —— 父工程的 xml文件
+
+1. 移除各种依赖，只做版本锁定。
+
+2. 添加图片验证、huutool工具版本锁定
+
+   ```xml
+   <dependencyManagement>
+       <dependencies>
+           <!--图片验证码 start-->
+           <dependency>
+               <groupId>com.github.whvcse</groupId>
+               <artifactId>easy-captcha</artifactId>
+               <version>${captcha.version}</version>
+           </dependency>
+           <!--图片验证码 end-->
+   
+           <!--java 工具包 start-->
+           <dependency>
+               <groupId>cn.hutool</groupId>
+               <artifactId>hutool-all</artifactId>
+               <version>${hutool.version}</version>
+           </dependency>
+           <!--java 工具包 end-->
+       </dependencies>
+   </dependencyManagement>
+   ```
+
+   
+
+`smpe-common` 模块 pom.xml 文件
+
+1. 将原父工程引入的依赖移过来
+
+   ```xml
+   <!--引入依赖-->
+       <dependencies>
+   
+           <!--lombok start-->
+           <dependency>
+               <groupId>org.projectlombok</groupId>
+               <artifactId>lombok</artifactId>
+               <version>${lombok.version}</version>
+           </dependency>
+           <!--lombok end-->
+   
+           <!--swagger start-->
+           <dependency>
+               <groupId>io.springfox</groupId>
+               <artifactId>springfox-swagger2</artifactId>
+               <version>${swagger.version}</version>
+           </dependency>
+           <dependency>
+               <groupId>io.springfox</groupId>
+               <artifactId>springfox-swagger-ui</artifactId>
+               <version>${swagger.version}</version>
+           </dependency>
+           <!--swagger end-->
+   
+           <!-- springboot web 启动器 start-->
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-web</artifactId>
+           </dependency>
+           <!-- springboot web 启动器 end-->
+   
+           <!--java-hutool 工具包 start-->
+           <dependency>
+               <groupId>cn.hutool</groupId>
+               <artifactId>hutool-all</artifactId>
+               <version>${hutool.version}</version>
+           </dependency>
+           <!--java-hutool 工具包 end-->
+   
+           <!--redis start-->
+           <dependency>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-data-redis</artifactId>
+           </dependency>
+           <!--redis end-->
+       </dependencies>
+   ```
+
+   
+
+`smpe-system`的 application-dev.yml
+
+1. 添加了登录相关配置、添加了jwt相关配置
+
+   ```yaml
+   # 登录相关配置
+   login:
+     # 登录缓存
+     cache-enable: true
+     #  是否限制单用户登录
+     single-login: false
+     #  验证码
+     login-code:
+       #  验证码类型配置 查看 LoginProperties 类
+       code-type: arithmetic
+       #  登录图形验证码有效时间/分钟
+       expiration: 2
+       #  验证码高度
+       width: 111
+       #  验证码宽度
+       heigth: 36
+       # 内容长度
+       length: 2
+       # 字体名称，为空则使用默认字体
+       font-name:
+       # 字体大小
+       font-size: 25
+   
+   jwt:
+     header: Authorization
+     # 令牌前缀
+     token-start-with: Bearer
+     # 必须使用最少88位的Base64对该令牌进行编码
+     base64-secret: ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFjZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=
+     # 令牌过期时间 单位毫秒 默认4小时
+     token-validity-in-seconds: 14400000
+     # 在线用户 key
+     online-key: online-token-
+     # 验证码
+     code-key: code-key-
+     # token 持续检查时间范围（默认30分钟，单位毫秒），在token即将过期时用户有操作，给token续期
+     detect: 1800000
+     # 续期时间范围，默认1小时，单位毫秒
+     renew: 3600000
+   ```
+
+2. 添加图片验证依赖
+
+   ```xml
+   <dependencies>
+       <!--图片验证码 start-->
+       <dependency>
+           <groupId>com.github.whvcse</groupId>
+           <artifactId>easy-captcha</artifactId>
+       </dependency>
+       <!--图片验证码 end-->
+   </dependencies>
+   ```
+
+   
+
+具体增加文件
+
+`com.zhang.annotation.AnonymousAccess`
+
+```java
+package com.zhang.annotation;
+
+import java.lang.annotation.*;
+
+/**
+ * ClassName AnonymousAccess
+ * Description TODO 类描述：用于标记匿名访问方法
+ *
+ * @author ZhangRenjie
+ * Date  2020/12/24 15:01
+ */
+@Inherited
+@Documented
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface AnonymousAccess {
+}
+```
+
+`com.zhang.annotation.rest.AnonymousGetMapping`
+
+```java
+package com.zhang.annotation.rest;
+
+import com.zhang.annotation.AnonymousAccess;
+import org.springframework.core.annotation.AliasFor;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.lang.annotation.*;
+
+/**
+ * ClassName AnonymousGetMapping
+ * Description TODO 类描述：支持匿名访问  GetMapping
+ *
+ * @author ZhangRenjie
+ * Date  2020/12/24 15:01
+ */
+@AnonymousAccess
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@RequestMapping(method = RequestMethod.GET)
+public @interface AnonymousGetMapping {
+    /**
+     * Alias for {@link RequestMapping#name}.
+     */
+    @AliasFor(annotation = RequestMapping.class)
+    String name() default "";
+
+    /**
+     * Alias for {@link RequestMapping#value}.
+     */
+    @AliasFor(annotation = RequestMapping.class)
+    String[] value() default {};
+
+    /**
+     * Alias for {@link RequestMapping#path}.
+     */
+    @AliasFor(annotation = RequestMapping.class)
+    String[] path() default {};
+
+    /**
+     * Alias for {@link RequestMapping#params}.
+     */
+    @AliasFor(annotation = RequestMapping.class)
+    String[] params() default {};
+
+    /**
+     * Alias for {@link RequestMapping#headers}.
+     */
+    @AliasFor(annotation = RequestMapping.class)
+    String[] headers() default {};
+
+    /**
+     * Alias for {@link RequestMapping#consumes}.
+     *
+     * @since 4.3.5
+     */
+    @AliasFor(annotation = RequestMapping.class)
+    String[] consumes() default {};
+
+    /**
+     * Alias for {@link RequestMapping#produces}.
+     */
+    @AliasFor(annotation = RequestMapping.class)
+    String[] produces() default {};
+}
+```
+
+
+
+`com.zhang.enums.ResultEnum`
+
+```java
+package com.zhang.enums;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+/**
+ * ClassName ResultEnum
+ * Description TODO 类描述：统一显影消息枚举
+ *
+ * @author ZhangRenjie
+ * Date  2020/12/24 9:45
+ */
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public enum ResultEnum {
+
+    SUCCESS(0, "SUCCESS")
+    ;
+
+    private int code;
+
+    private String msg;
+}
+```
+
+
+
+`com.zhang.exception.BadRequestException`
+
+```java
+package com.zhang.exception;
+
+import com.zhang.enums.ResultEnum;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
+/**
+ * ClassName BadRequestException
+ * Description TODO 类描述：通用请求异常
+ *
+ * @author ZhangRenjie
+ * Date  2020/12/24 11:15
+ */
+public class BadRequestException extends RuntimeException {
+    private Integer status = BAD_REQUEST.value();
+    public BadRequestException(String msg) {
+        super(msg);
+    }
+    public BadRequestException(Integer status, String msg) {
+        super(msg);
+        this.status = status;
+    }
+    public BadRequestException(ResultEnum resultEnum) {
+        super(resultEnum.getMsg());
+        this.status = resultEnum.getCode();
+    }
+}
+```
+
+
+
+`com.zhang.response.Result`
+
+```java
+package com.zhang.response;
+
+import com.zhang.enums.ResultEnum;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.util.Map;
+
+/**
+ * ClassName Result
+ * Description TODO 类描述：对返回前端数据进行封装
+ *
+ * @author ZhangRenjie
+ * Date  2020/12/24 9:39
+ */
+@Data
+@AllArgsConstructor
+public class Result<T> {
+
+    private Integer code;
+    private String message;
+    private T data;
+
+    /**
+     * Description //TODO 成功，只返回状态码和响应信息，没有返回数据
+     * @return Result<E> 封装返回的状态码和响应信息
+     * @author ZhangRenJie
+     * @date 2021/1/20 8:24
+     */
+    public static <E> Result<E> success(){
+        return new Result<>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), null);
+    }
+
+    /**
+     * Description //TODO 成功并封装返回数据
+     * @param data 返回数据
+     * @return Result<E> 封装返回的数据
+     * @author ZhangRenJie
+     * @date 2021/1/20 8:24
+     */
+    public static <E> Result<E> success(E data) {
+        return new Result<>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), data);
+    }
+}
+```
+
+
+
+`com.zhang.utils.RedisUtils`
+
+```java
+package com.zhang.utils;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
+
+/**
+ * ClassName RedisUtils
+ * Description TODO 类描述 SpringData Redis 的工具类
+ *
+ * @author ZhangRenjie
+ * Date  2021/1/19 15:59
+ */
+@RequiredArgsConstructor
+@Component
+@SuppressWarnings({"unchecked","all"})
+@Slf4j
+public class RedisUtils {
+    
+    private final RedisTemplate<Object, Object> redisTemplate;
+    
+    /**
+     * Description //TODO 存入 redis，并设置过期时间
+     * @param key 键
+     * @param value 值
+     * @param time 过期时间
+     * @param timeUnit 类型
+     * @return boolean 是否存入成功
+     * @author ZhangRenJie
+     * @date 2021/1/20 8:13
+     */
+    public boolean set(String key, Object value, long time, TimeUnit timeUnit) {
+        try {
+            if (time > 0) {
+                redisTemplate.opsForValue().set(key, value, time, timeUnit);
+            } else {
+                set(key, value);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Description //TODO 普通 redis 存入
+     * @param key 键
+     * @param value 值
+     * @return boolean 是否存入成功
+     * @author ZhangRenJie
+     * @date 2021/1/20 8:07
+     */
+    private boolean set(String key, Object value) {
+        try {
+            redisTemplate.opsForValue().set(key, value);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+}
+```
+
+
+
+`com.zhang.utils.StringUtils`
+
+```java
+package com.zhang.utils;
+
+import cn.hutool.core.util.StrUtil;
+
+/**
+ * ClassName StringUtils
+ * Description TODO 类描述：字符串工具类, 继承org.apache.commons.lang3.StringUtils类
+ *
+ * @author ZhangRenjie
+ * Date  2020/12/24 14:41
+ */
+public class StringUtils extends StrUtil {
+}
+```
+
+
+
+`com.zhang.modules.security.config.bean.LoginCode`
+
+```java
+package com.zhang.modules.security.config.bean;
+
+import lombok.Data;
+
+/**
+ * ClassName LoginCode
+ * Description TODO 类描述： 登录验证配置信息
+ *
+ * @author ZhangRenjie
+ * Date  2020/12/24 10:20
+ */
+@Data
+public class LoginCode {
+
+    /**
+     * 验证码配置
+     */
+    private LoginCodeEnum codeType;
+    /**
+     * 验证码有效时间 分钟
+     */
+    private Long expiration = 2L;
+    /**
+     * 验证码内容长度
+     */
+    private int length = 2;
+    /**
+     * 验证码码宽度
+     */
+    private int width = 111;
+    /**
+     * 验证码高度
+     */
+    private int height = 36;
+    /**
+     * 验证码字体
+     */
+    private String fontName;
+    /**
+     * 字体大小
+     */
+    private int fontSize = 25;
+
+    public LoginCodeEnum getCodeType() {
+        return codeType;
+    }
+}
+```
+
+
+
+`com.zhang.modules.security.config.bean.LoginCodeEnum`
+
+```java
+package com.zhang.modules.security.config.bean;
+
+/**
+ * ClassName LoginCodeEnum
+ * Description TODO 类描述：验证码配置枚举
+ *
+ * @author ZhangRenjie
+ * Date  2020/12/24 10:22
+ */
+public enum LoginCodeEnum {
+    /**
+     * 算数
+     */
+    arithmetic,
+    /**
+     * 中文
+     */
+    chinese,
+    /**
+     * 中文闪图
+     */
+    chinese_gif,
+    /**
+     * 闪图
+     */
+    gif,
+    spec
+}
+```
+
+
+
+`com.zhang.modules.security.config.bean.LoginProperties`
+
+```java
+package com.zhang.modules.security.config.bean;
+
+import com.wf.captcha.*;
+import com.wf.captcha.base.Captcha;
+import com.zhang.exception.BadRequestException;
+import com.zhang.utils.StringUtils;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+import java.awt.*;
+import java.util.Objects;
+
+/**
+ * ClassName LoginProperties
+ * Description TODO 类描述：从配置文件读取 login 配置
+ *
+ * @author ZhangRenjie
+ * Date  2020/12/24 10:17
+ */
+@Data
+@Configuration
+
+@ConfigurationProperties(prefix = "login")
+public class LoginProperties {
+
+    /**
+     * 账号单用户 登录
+     */
+    private  boolean singleLogin = false;
+
+    private  LoginCode loginCode;
+    /**
+     * 用户登录信息缓存
+     */
+    private boolean cacheEnable;
+
+    public boolean isSingleLogin(){
+        return singleLogin;
+    }
+
+    public boolean isCacheEnable(){
+        return cacheEnable;
+    }
+
+    /**
+     * Description //TODO 获取验证码生产类
+     * @return com.wf.captcha.base.Captcha
+     * @author ZhangRenJie
+     * @date 2020/12/24 11:07
+     **/
+    public Captcha getCaptcha() {
+        if (Objects.isNull(loginCode)) {
+            loginCode = new LoginCode();
+            if (Objects.isNull(loginCode.getCodeType())) {
+                loginCode.setCodeType(LoginCodeEnum.arithmetic);
+            }
+        }
+        return switchCaptcha(loginCode);
+    }
+
+    /**
+     * Description //TODO 依据配置信息生产验证码
+     * @param loginCode 登录验证配置信息
+     * @return com.wf.captcha.base.Captcha
+     * @author ZhangRenJie
+     * @date 2020/12/24 11:10
+     **/
+    private Captcha switchCaptcha(LoginCode loginCode) {
+
+        Captcha captcha;
+        synchronized (this) {
+            switch (loginCode.getCodeType()) {
+                case arithmetic:
+                    captcha = new ArithmeticCaptcha(loginCode.getWidth(), loginCode.getHeight());
+                    captcha.setLen(loginCode.getLength());
+                    break;
+                case chinese:
+                    captcha = new ChineseCaptcha(loginCode.getWidth(), loginCode.getHeight());
+                    captcha.setLen(loginCode.getLength());
+                    break;
+                case chinese_gif:
+                    captcha = new ChineseGifCaptcha(loginCode.getWidth(), loginCode.getHeight());
+                    captcha.setLen(loginCode.getLength());
+                    break;
+                case gif:
+                    captcha = new GifCaptcha(loginCode.getWidth(), loginCode.getHeight());
+                    captcha.setLen(loginCode.getLength());
+                    break;
+                case spec:
+                    captcha = new SpecCaptcha(loginCode.getWidth(), loginCode.getHeight());
+                    captcha.setLen(loginCode.getLength());
+                    break;
+                default:
+                    throw new BadRequestException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
+            }
+        }
+        if (StringUtils.isNotBlank(loginCode.getFontName())) {
+            captcha.setFont((new Font(loginCode.getFontName(), Font.PLAIN, loginCode.getFontSize())));
+        }
+        return captcha;
+    }
+}
+```
+
+
+
+`com.zhang.modules.security.config.bean.SecurityProperties`
+
+```java
+package com.zhang.modules.security.config.bean;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * ClassName SecurityProperties
+ * Description TODO 类描述Jwt参数配置 读取yml中对jwt的配置，注入到以下属性当中
+ *
+ * @author ZhangRenjie
+ * Date  2021/1/19 14:49
+ */
+@Data
+@ConfigurationProperties(prefix = "jwt")
+@Configuration
+public class SecurityProperties {
+
+    /**
+     * Request Hadders : Authorization
+     */
+    private String header;
+
+    /**
+     * 令牌前缀，最后留个空格 Bearer
+     */
+    private String tokenStartWith;
+
+    /**
+     * 必须使用最少88位的Base64对该令牌进行编码
+     */
+    private String base64Secret;
+
+    /**
+     * 令牌过期时间，单位毫秒
+     */
+    private Long tokenValidityInSeconds;
+
+    /**
+     * 在线用户 key，根据 key 查新 redis 中在线用户的数据
+     */
+    private String onlineKey;
+
+    /**
+     * 验证码 key
+     */
+    private String codeKey;
+
+    /**
+     * token 续期检查
+     */
+    private Long detect;
+
+    /**
+     * 续期时间
+     */
+    private Long renew;
+
+    /**
+     * 重写get方法，加入空格，防止空格造成影响
+     */
+    public String getTokenStartWith() {
+        return tokenStartWith + " ";
+    }
+}
+```
+
+
+
+`com.zhang.modules.security.controller.AuthorizationController`
+
+```java
+package com.zhang.modules.security.controller;
+
+import cn.hutool.core.util.IdUtil;
+import com.wf.captcha.base.Captcha;
+import com.zhang.annotation.rest.AnonymousGetMapping;
+import com.zhang.modules.security.config.bean.LoginCodeEnum;
+import com.zhang.modules.security.config.bean.LoginProperties;
+import com.zhang.modules.security.config.bean.SecurityProperties;
+import com.zhang.response.Result;
+import com.zhang.utils.RedisUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * ClassName AuthorizationController
+ * Description TODO 类描述： 授权接口
+ *
+ * @author ZhangRenjie
+ * Date  2020/12/24 9:35
+ */
+@Slf4j
+@RestController
+@RequestMapping("/api/auth")
+// 会生成一个包含常量，和标识了NotNull的变量的构造方法。生成的构造方法是私有的private。
+@RequiredArgsConstructor
+@Api(tags = "系统：系统授权接口")
+public class AuthorizationController {
+
+    private final LoginProperties loginProperties;
+    private final SecurityProperties properties;
+    private final RedisUtils redisUtils;
+
+
+    @ApiOperation("获取验证码")
+    @AnonymousGetMapping(value = "/code")
+    public Result<Map<String, Object>> getCode(){
+        Captcha captcha = loginProperties.getCaptcha();
+        String uuid = properties.getCodeKey() + IdUtil.simpleUUID();
+        // 当验证码类型为 arithmetic 时且长度 >= 2 时，captcha.text()的结果有几率为浮点型
+        String captchaValue = captcha.text();
+        if (captcha.getCharType() -1 == LoginCodeEnum.arithmetic.ordinal() & captchaValue.contains(".")) {
+            captchaValue = captchaValue.split("\\.")[0];
+        }
+        // 保存
+        redisUtils.set(uuid, captchaValue, loginProperties.getLoginCode().getExpiration(), TimeUnit.MINUTES);
+        log.info("登录图片验证码结果：" + captchaValue);
+        // 验证码信息
+        Map<String, Object> imgResult = new HashMap<String, Object>(2){{
+            put("img", captcha.toBase64());
+            put("uuid", uuid);
+        }};
+        return Result.success(imgResult);
+    }
+
+}
+```
+
+
+
+
+
+
+
 # 配置 swagger && git排除规则文件 `.gitignore`
+
 ## git排除项
 `.gitignore`
 ```gitignore

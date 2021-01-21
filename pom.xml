@@ -36,6 +36,8 @@
 
         <swagger.version>2.9.2</swagger.version>
         <lombok.version>1.18.8</lombok.version>
+        <captcha.version>1.6.2</captcha.version>
+        <hutool.version>5.5.0</hutool.version>
     </properties>
 
     <!--
@@ -68,38 +70,23 @@
                 <version>${swagger.version}</version>
             </dependency>
             <!--swagger end-->
+
+            <!--图片验证码 start-->
+            <dependency>
+                <groupId>com.github.whvcse</groupId>
+                <artifactId>easy-captcha</artifactId>
+                <version>${captcha.version}</version>
+            </dependency>
+            <!--图片验证码 end-->
+
+            <!--java 工具包 start-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <!--java 工具包 end-->
         </dependencies>
     </dependencyManagement>
-
-    <!--引入依赖-->
-    <dependencies>
-
-        <!--lombok start-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-        </dependency>
-        <!--lombok end-->
-
-        <!--swagger start-->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-        <!--swagger end-->
-
-        <!-- springboot web 启动器 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-    </dependencies>
 
 </project>

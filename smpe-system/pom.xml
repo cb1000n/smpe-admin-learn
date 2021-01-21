@@ -12,11 +12,19 @@
     <artifactId>smpe-system</artifactId>
 
     <dependencies>
+
         <dependency>
             <groupId>com.zhang</groupId>
             <artifactId>smpe-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <!--图片验证码 start-->
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+        </dependency>
+        <!--图片验证码 end-->
     </dependencies>
 
 </project>
